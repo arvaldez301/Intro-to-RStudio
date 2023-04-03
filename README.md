@@ -52,4 +52,25 @@ R is capable of workign with numerous data types some of the most basic ones to 
   - Whole numbers (```4```) are called integers, but are also numerics
   - Boolean values (```TRUE``` or ```FALSE```) are called logical
   - Text (or string) values are called characters
+
 Quotation marks around text indications that is a string (```"some text"```)
+
+If you wish to double check what data type you are working with you can call the ```class()``` function
+```
+# Declare variables of different types
+my_numeric <- 42
+my_character <- "universe"
+my_logical <- FALSE 
+
+# Check class of my_numeric
+class(my_numeric)
+
+# Check class of my_character
+class(my_character)
+
+# Check class of my_logical
+class(my_logical)
+```
+## Vectors
+### Creating a Vector
+### Naming a Vector
