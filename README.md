@@ -1,5 +1,13 @@
 # Intro-to-R
 Introduction to Beginner R Programing. Here you will learn everything from basic R commands! Below you will find some steps to help get you comfortable with R Studion
+## R Studio
+To begin workign with R studio there are two programs that you must download. One being the core R software and the other being R studio where you wil conduct all of your R coding.
+
+http://cran.r-project.org/
+
+http://rstudio.com
+
+R Studio also allows you to create Python scripts and run Terminal.
 ## Basics
 ### Arithmetic with R
 Within R, you are able to preform basic mathematical functions.
