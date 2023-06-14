@@ -8,6 +8,9 @@ http://cran.r-project.org/
 http://rstudio.com
 
 R Studio also allows you to create Python scripts and run Terminal.
+
+Note:
+R studio on Mac and Windows runs a little differently. On Mac, when uploading flies use```/```. Windows will use ```\```.
 ## Basics
 ### Arithmetic with R
 Within R, you are able to preform basic mathematical functions.
@@ -83,6 +86,7 @@ class(my_logical)
 ## How to import files for data
 ```
 setwd("/Users/angelrae301/Desktop/INBRE Bioinformatics/Week 1") #This is where your files are stored, so you are telling R to only work witin this folder
+#C:\\ must go before the Users when loading files on windows
 df <- read.csv("HW1_sewingthread.csv")
 head(df) #used to get the first parts of the table, looks at the first 6 lines
 str(df) #structure, how it is sorted
