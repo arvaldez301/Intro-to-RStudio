@@ -172,7 +172,7 @@ First is to make sure that you have the required packages installed and loaded
 install.packages("tidyverse")
 library(tidyverse)
 ```
-Ensure your data is in the appropriate format, with the dependent variable in one column and the grouping variable in another column. for this example the data set will be reffered to as 'data' with a dependent variable 'y' and a grouping variable 'group'
+Ensure your data is in the appropriate format, with the dependent variable in one column and the grouping variable in another column. for this example the data set will be referred to as 'data' with a dependent variable 'y' and a grouping variable 'group'
 
 Fit ANOVA model
 ```
@@ -191,10 +191,11 @@ This ANOVA table will provide you with various statistics, including the sum of 
 It is important to note that ANOVA assumes certain assumptions, such as normality and homogeneity of variances. 
 
 the tilde ```~``` is used to define the relationship between dependent variable and independent variables. The variable on the left-hand side of the tilde operator is the dependent variable and the variable(s) on the right hand side of tilde operator is/are called the independent variables
-```
+
 
 # Welcome to Intro to ggplot2 Tutorial
-
+A more indepth walk through to ggplot2 can be found at <https://github.com/arvaldez301/Basics-in-ggplot2>
+```
 # Install and load the ggplot2 package
 install.packages("ggplot2")
 library(ggplot2)
