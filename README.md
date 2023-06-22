@@ -40,9 +40,9 @@ Within R, you are able to preform basic mathematical functions.
 28 %% 6
 ```
 ### Variable Assignment
-Variable is a basic concept in statistical programing. A variable allows you to store a value (eg. 4) or an object (eg. a function description) in R. This value can later be used to easily access the value or the objet that is stored within this variable
+Variable is a basic concept in statistical programing. A variable allows you to store a value (eg. 4) or an object (eg. a function description) in R. This value can later be used to easily access the value or the objet that is stored within this variable. Using <- or = will tell R that you are giving something a name. in the example below, you are telling are that the number 4 will be called my_var
 ```
-my_var <_ 4
+my_var <- 4
 my_var
 ```
 You can also combine multiple variables into a joined variable
