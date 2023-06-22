@@ -85,11 +85,17 @@ class(my_logical)
 # R Tutorial
 ## How to import files for data
 ```
-setwd("/Users/angelrae301/Desktop/INBRE Bioinformatics/Week 1") #This is where your files are stored, so you are telling R to only work witin this folder - in this you would replace it with your personal computer information
+setwd("/Users/angelrae301/Desktop/INBRE Bioinformatics/Week 1")
+
+#This is where your files are stored, so you are telling R to only work witin this folder - in this you would replace it with your personal computer information
 #C:\\ must go before the Users when loading files on windows
+
 df <- read.csv("file_name_here.csv")
+
 head(df) #used to get the first parts of the table, looks at the first 6 lines
+
 str(df) #structure, how it is sorted
+
 summary(df)
 ```
 ## Print a welcome message
