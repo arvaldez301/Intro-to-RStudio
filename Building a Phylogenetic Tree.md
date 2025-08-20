@@ -4,12 +4,14 @@ Further information on the other packages that we will be using can also be foun
 
 # Building your Tree
 Before we get started we need to install a few packages. Bioconductor requires an additional software to help with the install process, called BiocManager. You will only need to do this install once and then can load each of the librarys as normal.
+
 ```
 install.packages(c("rentrez", "BiocManager"))
 BiocManager::install(c("DECIPHER", "Biostrings", "phangorn", "treeio", "ggtree"))
 ```
 
 The following libraries will be used to build our tree. Each libary serves a specific function:
+
 * ```rentrez``` Used directly to retrieve nucleotide sequenes from NCBI GenBank via accession numbers. This automates sequence aquisition without downloading FASTA files.
 * ```DECIPHER``` Part of the Bioconductor Software. Provides functions for multiple sequence alignment.
 * ```Biostrings``` Part of the Bioconductor Software. Provides efficient data structures and functions for handling large DNA and protein sequence datasets. It ensures the sequences are stored and manipulated properly for downstream analyses.
@@ -37,7 +39,17 @@ accessions <- c("HQ013317.1", "KX233874", "DQ297506.1")
 ```
 
 ## STEP 2: Function to fetch sequences and scientific names
-The next step is to pull all of that information out of NCBI that we want. The first part of the code below will pull out the FASTA File, then will pull out the scientific name that is registered with the accession number, and finally will rename the pulled information to also include the accesstion number. THis cam be modified however you would like, so if you dont want to include the accession number in your tree you would remove ```(", acc, ")``` from the code.
+The next step is to pull all of that information out of NCBI that we want. The first part of the code below will pull out the FASTA File, then will pull out the scientific name that is registered with the accession number, and finally will rename the pulled information to also include the accesstion number. THis cam be modified however you would like, so if you dont want to include the accession number in your tree you would could you the alternate code. Take a look to see how the codes differ!
+
+**Scientific Name and Accession Number**
+
+* ```entrez_fetch``` pulls the raw sequence data from NCBI
+* ```entrez_summary``` retrieves metadata, such as the organism name.
+* ```DNAStringSet``` allows efficient handling of sequences in R.
+* ```Reduce(c, seqs_list)``` combines multiple DNAStringSet objects into one.
+
+The function ensures each sequence has a unique, descriptive name by combining the scientific name with its accession.
+
 ```
 fetch_seqs_and_names <- function(accessions) {
   seqs_list <- list()
@@ -65,47 +77,132 @@ fetch_seqs_and_names <- function(accessions) {
 }
 ```
 
+**Scientific Name Only**
+```
+fetch_seqs_and_names <- function(accessions) {
+  seqs_list <- list()
+  name_map <- character()
+  
+  for (acc in accessions) {
+    # Fetch sequence in FASTA format
+    fasta <- entrez_fetch(db = "nucleotide", id = acc, rettype = "fasta")
+    writeLines(fasta, paste0(acc, ".fasta"))
+    seq <- readDNAStringSet(paste0(acc, ".fasta"))
+    
+    # Get scientific name
+    summary <- entrez_summary(db = "nucleotide", id = acc)
+    sci_name <- summary$organism
+    
+    # Use only the scientific name as the label
+    new_name <- sci_name
+    names(seq) <- new_name
+    name_map[acc] <- new_name
+    
+    seqs_list[[acc]] <- seq
+  }
+  
+  list(sequences = Reduce(c, seqs_list), name_map = name_map)
+}
+```
+
 ## STEP 3: Fetch sequences and names
+Here we use the custom function fetch_seqs_and_names() (built in Step 2) to retrieve DNA sequences and their corresponding scientific names from GenBank.
+
+```data$sequences``` contains the DNA sequences in DNAStringSet format
+```data$name_map``` stores the mapping between accession numbers and species names
+
 ```
 data <- fetch_seqs_and_names(accessions)
-seqs <- data$sequences
+seqs <- data$sequences 
 name_map <- data$name_map
 ```
 
 ## STEP 4: Align sequences
-From the library ```DECIPHER```, this function is used to generate a high-quality alignment of COI gene sequences prior to tree construction.
+From the library ```DECIPHER```, this function is used to generate a high-quality alignment of COI gene sequences prior to tree construction. Multi Sequence Alignment ensures that homologous nucleotides are compared across species.
+
 ```
 aligned <- AlignSeqs(seqs)
 ```
 
 ## STEP 5: Create phylogenetic data
+Convert the aligned sequences into a ```phyDat object``` (from the ```phangorn``` package). This is a special format required for phylogenetic analysis.
+
 ```
 phydat <- phyDat(as.matrix(aligned), type = "DNA")
 ```
 
 ## STEP 6: Distance matrix and initial NJ tree
+Moving on to conducting a maximum liklihood and Neighbor Joining analysis. Each serves a specific purpose and is important to the construction of our tree. Below I have provided short explanatins regarding what each of these methods do.
+
+**Maximum Likelihood**
+* Statistical apporach
+    * Finds the tree that most likely explains the observed sequence data given a model of evolution
+* Model Based
+  * Incorporates subsitution models to account for different rates of evolution among sites
+* Branch Support
+  * Combined with bootstrapping to assess confidence in tree branches
+* Accurate but computationally intensive
+  * Provides high-resolution trees but can be slow for large datasets
+ 
+**Neighbor-Joining (NJ)**
+* Distance-based method
+    * Builds a tree using pairwise distances between sequences
+* Fast and efficient
+  * Good for large datasets where computational speed is important
+* Produces unrooted trees
+  * Typically requires an outgroup to root the tree. We will be doing this later on!
+* Less model-dependent
+  * Simpler than ML by may be less accurate for complex evolutionary scenarios
+
+```dist.ml()``` → calculates a maximum-likelihood (ML) based distance matrix for all sequences.
+
+```NJ()``` → builds an initial Neighbor-Joining (NJ) tree based on those distances.
+
 ```
 dm <- dist.ml(phydat)
 treeNJ <- NJ(dm)
 ```
 
 ## STEP 7: Bootstrap support (500 replicates)
+Bootstrapping is a statistical method used to assess the reliability of branches in a phylogenetic tree. It involves repeatedly resampling the sequence alignment with replacement to create many pseudo-replicate datasets. For each replicate, a tree is reconstructed, and the frequency with which a particular branch appears across all replicates is calculated as the bootstrap support value. High bootstrap values (typically ≥70%) indicate strong support for that branch, while low values suggest uncertainty. Bootstrapping provides a way to quantify confidence in the inferred relationships and helps researchers distinguish well-supported clades from more tentative ones.
+
+In short, we will be doing a bootstrap with 500 replicates and remember, higher bootstrap values indicate a stronger level of confidence in that clade
+  
 ```
 bs <- bootstrap.phyDat(phydat, FUN = function(x) NJ(dist.ml(x)), bs = 500)
 ```
 
 ## STEP 8: Create tree with bootstrap values, without plotting
+Attach the bootstrap values to the tree topology.
+
+* ```plotBS()``` adds bootstrap values to nodes, but with ```plot = FALSE``` we keep the tree object without drawing it.
+
 ```
 tree_with_bs <- plotBS(treeNJ, bs, p = 50, type = "phylogram", plot = FALSE)
 ```
 
 ## Step 9: OutGroup
+Root the tree using an outgroup (a distantly related taxon). This outgroup provides a reference point to determine the direction of evolutionary change, allowing the tree to be properly rooted. Some important points that an outgroup can help you determine are:
+* Helps distingues ancestral traits from derived (apomorphic) trains in the ingroup
+* Clarifys relationships by providing a comparison outside the group of interest. Outgroups help resolve branching order among ingroup taxa
+* They help to avoid misinterpretation by preventing misidentification of trait evolution patterns due to lack of context
+* It also serves as a benchmark for divergence. It serves as a baseline to estimate relative evolutionary distances among ingroups
+  
+For this example all sequences beginning with "Haliotis" are used as outgroup taxa. ```resolve.root = TRUE``` ensures the tree is properly rooted.
+  
 ```
 out_tips <- grep("^Haliotis", tree_with_bs$tip.label, value = TRUE)
 rtree <- root(tree_with_bs, outgroup = out_tips, resolve.root = TRUE)
 ```
 
 ## STEP 10: Create and plot the tree
+Now lets visualize our tree! For this we will be utilizing ```ggtree```. Everything is fully customizable and can be altered to fit your preferences. Some aspects of the ```plot.margin``` function will need to be adjusted depending on the amount of seqeunces you are including as the tree can become clutered. Playing around with the numbers and replotting the tree is a great way to learn what each function does!
+
+* ```layout = "rectangular"``` → standard phylogram layout.
+* ```geom_text2()``` → adds bootstrap labels above branches.
+* Axis scaling and spacing adjustments ensure legibility (especially for large trees).
+* The tree is formatted in Times New Roman, size 12, for publication-ready figures.
+  
 ```
 gtree <- ggtree(tree_with_bs, layout = "rectangular", branch.length = "branch.length")
 
