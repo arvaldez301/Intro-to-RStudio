@@ -35,7 +35,7 @@ library(ggplot2)
 Now that all of our libraries are loaded, we can begin determining our accesion numbers and logging those into our code. Within NCBI (https://www.ncbi.nlm.nih.gov/), you can do a search of the organsisms that you are looking. Each organism logged has a unique number that identifies them. This number will be used in our code and will let R know what sequences to pull. For this code, you can include as many accession numbers as you would like, just make sure that each number is in quotations and seperated by a comma.
 
 ```
-accessions <- c("HQ013317.1", "KX233874", "DQ297506.1")
+accessions <- c("____", "____", "______")
 ```
 
 ## STEP 2: Function to fetch sequences and scientific names
