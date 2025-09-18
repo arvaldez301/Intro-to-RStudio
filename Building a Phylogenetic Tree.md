@@ -37,6 +37,11 @@ Now that all of our libraries are loaded, we can begin determining our accesion 
 ```
 accessions <- c("____", "____", "______")
 ```
+We will be using the following accession numbers so please copy and paste the following code into your markdown file.
+
+```
+accessions <- c("DQ673917.1", "MH253817.1", "KF384926.1", "MH260579.1", "JAATJU010022200.1", "BI431008.1", "NC_027278.1", "U39315.1", "HM102293.1", "HM102307.1", "MK773649.1", "JF459178.1")
+```
 
 ## STEP 2: Function to fetch sequences and scientific names
 The next step is to pull all of that information out of NCBI that we want. The first part of the code below will pull out the FASTA File, then will pull out the scientific name that is registered with the accession number, and finally will rename the pulled information to also include the accesstion number. THis cam be modified however you would like, so if you dont want to include the accession number in your tree you would could you the alternate code. Take a look to see how the codes differ!
