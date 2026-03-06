@@ -85,7 +85,7 @@ class(my_logical)
 # R Tutorial
 ## How to import files for data
 ```
-setwd("/Users/angelrae301/Desktop/INBRE Bioinformatics/Week 1")
+setwd("<file path of wehre everything is stored>")
 
 #This is where your files are stored, so you are telling R to only work witin this folder - in this you would replace it with your personal computer information
 #C:\\ must go before the Users when loading files on windows
