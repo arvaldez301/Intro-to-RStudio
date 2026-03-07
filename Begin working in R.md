@@ -11,9 +11,42 @@ R Studio also allows you to create Python scripts and run Terminal.
 
 Note:
 R studio on Mac and Windows runs a little differently. On Mac, when uploading flies use```/```. Windows will use ```\```.
-## Basics
+
+## Getting Familiar with RStudio
+First lets practice some basic functions and operations that are necessary for operating and working in R.
+```
+#Set up and install your environment
+setwd("<file path of wehre everything is stored>")
+
+#Installation only needs to happen once (typically)
+install.packages("tidyverse")
+
+#After installation, only need to load the library, but this has to be done everytime you start working
+library(tidyverse)
+library(ggplot2)
+```
+## Basic Functions
+There are some specific details about R that carry over throughout your time using it. 
+
+```title <- function```
+
+this ```<-``` is an assignment operator and will tell R that you are performing a function but want to call it a specific name. From that moment on, you can call that function and R will know what it is. This is particulary helpful when loading data
+
+### Uploading Data and Viewing
+```
+df <- read.csv("File path you your path")
+
+data(msleep) #built in ggplot2 data set
+
+head(msleep) #calls the first 6 lines of your code to view
+
+str(msleep) #checks the structure of your data
+
+summary(msleep) #quick statistical summary
+```
+
 ### Arithmetic with R
-Within R, you are able to preform basic mathematical functions.
+Within R, you are able to preform basic mathematical functions. It is basically a giant calculator,
 ```
 # Calculate 3 + 4
 3 + 4
@@ -38,6 +71,22 @@ Within R, you are able to preform basic mathematical functions.
 
 # Modulo
 28 %% 6
+
+# Create a variable
+x <- 10
+y <- 5
+
+# Basic math
+sum_result <- x + y
+print(sum_result)
+
+# Create a list of numbers (a vector)
+heights <- c(150, 162, 178, 185, 155)
+
+# Get quick statistics
+mean(heights)
+median(heights)
+sd(heights) # Standard Deviation
 ```
 ### Variable Assignment
 Variable is a basic concept in statistical programing. A variable allows you to store a value (eg. 4) or an object (eg. a function description) in R. This value can later be used to easily access the value or the objet that is stored within this variable. Using <- or = will tell R that you are giving something a name. in the example below, you are telling are that the number 4 will be called my_var
@@ -58,7 +107,7 @@ my_apples + my_oranges
 my_fruit <- my_apples + my_oranges
 ```
 ### Basic Data Types in R
-R is capable of workign with numerous data types some of the most basic ones to get started with are
+R is capable of working with numerous data types some of the most basic ones to get started with are
   - Demical values (```4.5```) are called numerics
   - Whole numbers (```4```) are called integers, but are also numerics
   - Boolean values (```TRUE``` or ```FALSE```) are called logical
@@ -82,43 +131,7 @@ class(my_character)
 # Check class of my_logical
 class(my_logical)
 ```
-# R Tutorial
-## How to import files for data
-```
-setwd("<file path of wehre everything is stored>")
 
-#This is where your files are stored, so you are telling R to only work witin this folder - in this you would replace it with your personal computer information
-#C:\\ must go before the Users when loading files on windows
-
-df <- read.csv("file_name_here.csv")
-
-head(df) #used to get the first parts of the table, looks at the first 6 lines
-
-str(df) #structure, how it is sorted
-
-summary(df)
-```
-## Print a welcome message
-```
-print("Welcome to RStudio!")
-```
-## Basic arithmetic operations
-```
-x <- 10
-y <- 5
-sum <- x + y
-diff <- x - y
-product <- x * y
-quotient <- x / y
-```
-## Print the results
-```
-print("Basic Arithmetic Operations:")
-print(paste("Sum:", sum))
-print(paste("Difference:", diff))
-print(paste("Product:", product))
-print(paste("Quotient:", quotient))
-```
 ## Creating and manipulating vectors
 ```
 vector1 <- c(1, 2, 3, 4, 5)
