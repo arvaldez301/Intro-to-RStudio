@@ -3,9 +3,7 @@ Introduction to Beginner R Programing. Here you will learn everything from basic
 ## R Studio
 To begin workign with R studio there are two programs that you must download. One being the core R software and the other being R studio where you wil conduct all of your R coding.
 
-http://cran.r-project.org/
-
-http://rstudio.com
+<https://posit.co/download/rstudio-desktop/>
 
 R Studio also allows you to create Python scripts and run Terminal.
 
